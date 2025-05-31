@@ -4,12 +4,18 @@ class Pert {
         this.actividades = [];
     }
 
-    nuevaActividad(nombre, duracion, predecesores) {
+    nuevaActividad(nombre, tiempoOptimista, tiempoMasProbable, tiempoPesimista, predecesores) {
         this.idActividad += 1;
+
+        const duracion = (parseFloat(tiempoOptimista) + 4 * parseFloat(tiempoMasProbable) + parseFloat(tiempoPesimista)) / 6;
+
         const actividad = {
             id: this.idActividad,
             nombre,
-            duracion: parseInt(duracion),
+            tiempoOptimista: parseFloat(tiempoOptimista),
+            tiempoMasProbable: parseFloat(tiempoMasProbable),
+            tiempoPesimista: parseFloat(tiempoPesimista),
+            duracion: duracion,
             predecesores: predecesores.split(',').map(e => e.trim()),
             sucesores: [],
             estart: 0,
@@ -67,7 +73,6 @@ class Pert {
     }
 
     generarDiagrama() {
-        // Reseteamos el estado
         let tiempoFinal = 0;
         this.actividades.forEach(actividad => {
             if (!actividad.efinish) {
@@ -84,6 +89,12 @@ class Pert {
 
         return this.actividades;
     }
+
+    limpiarActividades() {
+        this.idActividad = 0;
+        this.actividades = [];
+      }
+      
 }
 
 module.exports = Pert;
